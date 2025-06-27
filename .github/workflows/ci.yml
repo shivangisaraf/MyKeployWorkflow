@@ -1,0 +1,26 @@
+name: Keploy API Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-keploy-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Keploy CLI
+        run: |
+          curl --silent -L https://keploy.io/ent/install.sh | bash
+
+      - name: Run Keploy Test Suite
+        run: |
+          export KEPLOY_API_KEY=${{ secrets.KEPLOY_API_KEY }}
+          keploy test-suite --app=b3bf8007-3f1c-42b1-8ef7-081851e5f73a \
+                           --base-path=https://unagi.amazon.in/1/events/com.amazon.eel.SearchAutocompleteUIServiceMetrics.nexus \
+                           --cloud
